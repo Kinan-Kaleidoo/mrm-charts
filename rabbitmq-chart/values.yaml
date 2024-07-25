@@ -1,0 +1,18 @@
+replicaCount: 1
+namespace: rabbit2-helm
+
+image:
+  repository: me-west1-docker.pkg.dev/rabbitmq-mamram-demo/new-3-13/rabbitmq
+  tag: "3.13"
+  pullPolicy: Always
+
+service:
+  amqpPort: 5671
+  streamPort: 5551
+  managementPort: 15672
+  type: LoadBalancer
+rabbitmq:
+  enabledPlugins: >-
+    rabbitmq_schema_definition_sync,rabbitmq_standby_replication,rabbitmq_management,rabbitmq_management_agent,rabbitmq_prometheus,rabbitmq_web_dispatch
+
+configMapName: rabbitmq-downstream-conf

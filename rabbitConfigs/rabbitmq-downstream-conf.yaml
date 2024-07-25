@@ -1,0 +1,38 @@
+apiVersion: v1
+data:
+  rabbitmq.conf: |
+    cluster_name = rabbit@rabbitmq-secondary-cluster
+    schema_definition_sync.operating_mode = downstream
+    listeners.tcp = none
+
+    listeners.ssl.default = 5671
+
+    ssl_options.cacertfile = /etc/rabbitmq/certs/ca_certificate.pem
+    ssl_options.certfile = /etc/rabbitmq/certs/server_certificate.pem
+    ssl_options.keyfile = /etc/rabbitmq/certs/server_key.pem
+    ssl_options.verify = verify_none
+    ssl_options.fail_if_no_peer_cert = false
+
+    schema_definition_sync.ssl_options.cacertfile = /etc/rabbitmq/pub-certs/ca_certificate.pem
+    schema_definition_sync.ssl_options.certfile = /etc/rabbitmq/pub-certs/client_certificate.pem
+    schema_definition_sync.ssl_options.keyfile = /etc/rabbitmq/pub-certs/client_key.pem
+    schema_definition_sync.ssl_options.verify = verify_none
+    schema_definition_sync.ssl_options.fail_if_no_peer_cert = false
+
+    standby.replication.operating_mode = downstream
+    standby.replication.retention.size_limit.messages = 5000000000
+    schema_definition_sync.downstream.locals.global_parameters = ^standby
+
+
+
+    stream.listeners.tcp = none
+    stream.listeners.ssl.1 = 5551
+
+    standby.replication.downstream.ssl_options.cacertfile = /etc/rabbitmq/pub-certs/ca_certificate.pem
+    standby.replication.downstream.ssl_options.certfile = /etc/rabbitmq/pub-certs/client_certificate.pem
+    standby.replication.downstream.ssl_options.keyfile = /etc/rabbitmq/pub-certs/client_key.pem
+    standby.replication.downstream.ssl_options.verify = verify_none
+    standby.replication.downstream.ssl_options.fail_if_no_peer_cert = false
+kind: ConfigMap
+metadata:
+  name: rabbitmq-downstream-conf
